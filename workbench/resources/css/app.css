@@ -1,0 +1,3 @@
+/* Front-end CSS for the workbench playground (/), built like an app would: npm run build:workbench */
+@import 'tailwindcss';
+@import '../../../resources/css/index.css';
