@@ -3,111 +3,133 @@
 namespace LazyUI\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\File;
+use LazyUI\LazyUI;
 
-class InstallCommand extends Command implements PromptsForMissingInput
+class InstallCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'lazy:install';
+    protected $signature = 'lazy:install
+        {--config : Also publish config/lazyui.php}
+        {--no-panels : Do not add LazyUIPlugin to Filament panel providers}
+        {--no-css : Do not add the LazyUI import to resources/css/app.css}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Install LazyUI to your application.';
+    protected $description = 'Install LazyUI: publish assets, register the plugin on every Filament panel, import the CSS';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle(): void
+    public function handle(): int
     {
-        $this->publishAssets();
+        $this->call('filament:assets');
+        $this->call('vendor:publish', ['--tag' => 'lazyui-assets', '--force' => true]);
 
-        $this->newLine();
-        $this->components->success('LazyUI installed successfully');
-        $this->components->bulletList([
-            'resources/css/lazy',
-            'resources/js/lazy',
-            'public/assets/lazy',
-        ]);
-        $this->newLine();
-    }
-
-    protected function publishAssets(): void
-    {
-        $this->createDirectories();
-        $this->copyFiles();
-        $this->mergePackageJson();
-        $this->requireComponents();
-    }
-
-    protected function createDirectories(): void
-    {
-        collect([
-            resource_path('css/lazy'),
-            resource_path('js/lazy'),
-            public_path('assets/lazy'),
-        ])->each(function ($path) {
-            if (!File::isDirectory($path)) {
-                File::makeDirectory($path, 0777, true);
-            }
-        });
-    }
-
-    protected function copyFiles(): void
-    {
-        File::copyDirectory(__DIR__ . "/../../resources/css", resource_path('css/lazy'));
-        File::copy(__DIR__ . "/../../resources/js/app.js", resource_path('js/lazy/app.js'));
-        if(!File::isDirectory(resource_path('js/lazy/plugins'))) {
-            File::makeDirectory(resource_path('js/lazy/plugins'), 0777, true);
+        if ($this->option('config')) {
+            $this->call('vendor:publish', ['--tag' => 'lazyui-config']);
         }
-        File::copyDirectory(__DIR__ . "/../../public/assets-lazy", public_path('assets/lazy'));
-    }
 
-    protected function mergePackageJson(): void
-    {
-        $packageRoot = File::get(base_path('package.json'));
-        $packageLazy = File::get(__DIR__ . '/../../package.json');
+        $changes = [];
 
-        $package = json_decode($packageRoot, true);
-        $lazy = json_decode($packageLazy, true);
-
-        $package = $this->arrayMergeRecursiveDistinct($package, $lazy);
-
-        File::put(
-            base_path('package.json'),
-            json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-        );
-    }
-
-
-    protected function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array
-    {
-        $merged = $array1;
-
-        foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = $this->arrayMergeRecursiveDistinct($merged[$key], $value);
-            } else {
-                $merged[$key] = $value;
+        if (! $this->option('no-panels')) {
+            foreach (File::glob(app_path('Providers/Filament/*PanelProvider.php')) as $provider) {
+                $changes[] = $this->registerPlugin($provider);
             }
         }
 
-        return $merged;
+        if (! $this->option('no-css')) {
+            $changes[] = $this->addImport(
+                resource_path('css/app.css'),
+                'resources/css/index.css',
+                after: "@import 'tailwindcss';",
+            );
+        }
+
+        $changes = array_values(array_filter($changes));
+
+        if ($changes !== []) {
+            $this->components->bulletList($changes);
+        }
+
+        $this->components->info('LazyUI is installed.');
+
+        return self::SUCCESS;
     }
 
-    protected function requireComponents(): void
+    /**
+     * Adds ->plugin(LazyUIPlugin::make()) right after ->id(...) in a panel provider.
+     * A panel with its own Vite theme gets the LazyUI source imported there and ->precompiled(false),
+     * so LazyUI is compiled once, together with the theme.
+     */
+    protected function registerPlugin(string $file): ?string
     {
-        $this->call('lazy:component', ['name' => 'button', '--silent' => true]);
-        $this->call('lazy:component', ['name' => 'dropdown', '--silent' => true]);
-        $this->call('lazy:component', ['name' => 'nav', '--silent' => true]);
-        $this->call('lazy:component', ['name' => 'sheet', '--silent' => true]);
-        $this->call('lazy:component', ['name' => 'switch', '--silent' => true]);
+        $contents = File::get($file);
+
+        if (str_contains($contents, 'LazyUIPlugin')) {
+            return null;
+        }
+
+        if (! preg_match("/->id\\(\\s*['\"]([^'\"]+)['\"]\\s*\\)/", $contents, $id)) {
+            $this->components->warn("Could not find ->id(...) in {$this->short($file)}. Add ->plugin(\\LazyUI\\Filament\\LazyUIPlugin::make()) manually.");
+
+            return null;
+        }
+
+        $theme = resource_path("css/filament/{$id[1]}/theme.css");
+        $useTheme = str_contains($contents, '->viteTheme(') && File::exists($theme);
+        $plugin = '->plugin(\\LazyUI\\Filament\\LazyUIPlugin::make()'.($useTheme ? '->precompiled(false)' : '').')';
+
+        File::put($file, preg_replace('/^(\s*)(->id\([^)]*\))\R/m', "$1$2\n$1{$plugin}\n", $contents, 1));
+
+        if ($useTheme) {
+            $this->addImport($theme, 'resources/css/filament.css', after: "vendor/filament/filament/resources/css/theme.css';");
+        }
+
+        return "{$this->short($file)}: {$plugin}".($useTheme ? " (+ import in {$this->short($theme)})" : '');
+    }
+
+    protected function addImport(string $file, string $packageFile, string $after): ?string
+    {
+        if (! File::exists($file)) {
+            return null;
+        }
+
+        $contents = File::get($file);
+        $line = "@import '".$this->relative(dirname($file), LazyUI::path($packageFile))."';";
+
+        if (str_contains($contents, 'lazyui/'.$packageFile)) {
+            return null;
+        }
+
+        $position = strpos($contents, $after);
+
+        if ($position === false) {
+            $this->components->warn("Add to {$this->short($file)}: {$line}");
+
+            return null;
+        }
+
+        $end = strpos($contents, "\n", $position);
+        $end = $end === false ? strlen($contents) : $end;
+
+        File::put($file, substr($contents, 0, $end)."\n".$line.substr($contents, $end));
+
+        return "{$this->short($file)}: {$line}";
+    }
+
+    protected function relative(string $from, string $to): string
+    {
+        // Point at vendor/ (not a symlink target) so the path keeps working for every install.
+        $to = str_replace(LazyUI::path(), base_path('vendor/'.LazyUI::PACKAGE), $to);
+
+        $from = explode('/', trim(str_replace('\\', '/', $from), '/'));
+        $to = explode('/', trim(str_replace('\\', '/', $to), '/'));
+
+        while ($from !== [] && $to !== [] && $from[0] === $to[0]) {
+            array_shift($from);
+            array_shift($to);
+        }
+
+        return str_repeat('../', count($from)).implode('/', $to);
+    }
+
+    protected function short(string $path): string
+    {
+        return ltrim(str_replace(base_path(), '', $path), '/');
     }
 }

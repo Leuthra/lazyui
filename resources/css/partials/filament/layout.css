@@ -1,0 +1,72 @@
+/*
+ * Canvas, topbar, page header, auth pages.
+ */
+@layer components {
+    .fi-body {
+        @apply bg-(--lz-canvas) text-(--lz-text) antialiased;
+    }
+
+    /* Topbar: translucent glass, no hard line. */
+    .fi-topbar {
+        @apply shadow-none ring-0;
+        background-color: color-mix(in oklab, var(--lz-canvas) var(--lz-glass-opacity), transparent);
+        backdrop-filter: blur(var(--lz-glass-blur));
+
+        & .fi-icon-btn {
+            @apply rounded-full;
+        }
+    }
+
+    .fi-topbar-ctn {
+        @apply border-b border-dashed border-transparent transition-colors;
+    }
+
+    /* Page header: bigger, tighter title like the LazyUI dashboard. */
+    .fi-header {
+        @apply gap-y-3;
+    }
+
+    .fi-header-heading {
+        @apply text-2xl font-semibold tracking-tight text-(--lz-text) sm:text-[1.75rem];
+    }
+
+    .fi-header-subheading {
+        @apply max-w-2xl text-sm text-(--lz-text-muted);
+    }
+
+    .fi-breadcrumbs {
+        @apply text-xs;
+
+        & ol {
+            @apply gap-x-1.5;
+        }
+    }
+
+    .fi-page-content {
+        @apply gap-y-6;
+    }
+
+    /* Auth & other simple pages: soft gradient canvas, floating card. */
+    .fi-simple-layout {
+        @apply lazy-gradient bg-(--lz-canvas);
+    }
+
+    .fi-simple-main {
+        @apply rounded-2xl bg-(--lz-surface) shadow-(--lz-shadow-pop) ring-0;
+
+        /* Phones: no floating card, the form sits on the canvas. */
+        @apply max-sm:rounded-none max-sm:bg-transparent max-sm:shadow-none;
+    }
+
+    .fi-simple-header-heading {
+        @apply text-2xl font-semibold tracking-tight;
+    }
+
+    .fi-simple-header-subheading {
+        @apply text-(--lz-text-muted);
+    }
+
+    .fi-logo {
+        @apply tracking-tight;
+    }
+}

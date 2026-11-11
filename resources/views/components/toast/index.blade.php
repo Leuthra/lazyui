@@ -25,5 +25,6 @@
     tabindex="-1"
 ></div>
 
-<script> window.addEventListener('toast', ({ detail }) => { detail.forEach(d => { toast(d); }); }); </script>
-@if (session('toast')) <script> document.addEventListener('DOMContentLoaded', () => { toast(@js(session('toast'))); }) </script> @endif
+@if (session('toast'))
+    <script>window.lazyReady(() => window.toast?.(@js(session('toast'))));</script>
+@endif

@@ -1,0 +1,23 @@
+/*
+ * LazyUI for a custom Filament theme (resources/css/filament/<panel>/theme.css), after Filament's import:
+ *
+ *   @import '../../../../vendor/filament/filament/resources/css/theme.css';
+ *   @import '../../../../vendor/lazyui/lazyui/resources/css/filament.css';
+ *
+ * and register the plugin with ->precompiled(false). Panels without a custom theme
+ * use the precompiled dist/filament.css instead (built from this same file).
+ */
+@import './theme.css';
+@import './partials/base.css';
+@import './partials/utils.css';
+@import './partials/filament/index.css';
+
+@source '../views';
+@source '../js';
+
+/* Front-end-only views: not needed in panels. */
+@source not '../views/demo.blade.php';
+@source not '../views/components/layout/index.blade.php';
+@source not '../views/components/layout/sidebar.blade.php';
+@source not '../views/components/layout/header.blade.php';
+@source not '../js/plugins/alpine/tooltip.js';

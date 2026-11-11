@@ -1,0 +1,149 @@
+/*
+ * Field labels, inputs, selects, checkbox/radio/toggle, toggle buttons, repeater/builder, uploads, editors.
+ */
+@layer components {
+    /* Labels: LazyUI's small medium-weight label. */
+    .fi-fo-field-label-content {
+        @apply text-[13px] font-medium text-(--lz-text);
+    }
+
+    /* Inputs: roomy, soft border, monochrome focus ring. */
+    .fi-input-wrp {
+        @apply rounded-(--lz-radius-control) border border-(--lz-line-strong) bg-(--lz-surface) shadow-none ring-0 transition-[box-shadow,border-color] dark:border-cat-700/60 dark:bg-cat-700/10;
+
+        &:not(.fi-disabled):not(:has(.fi-input-wrp-actions :focus)) {
+            @apply focus-within:border-transparent focus-within:ring-[1.7px] focus-within:ring-(--lz-ring);
+
+            &.fi-invalid {
+                @apply focus-within:ring-(--danger-600) dark:focus-within:ring-(--danger-500);
+            }
+        }
+
+        &.fi-invalid {
+            @apply border-(--danger-600) dark:border-(--danger-500);
+        }
+
+        &.fi-disabled {
+            @apply bg-(--lz-surface-muted);
+        }
+
+        & .fi-input-wrp-prefix,
+        & .fi-input-wrp-suffix {
+            @apply text-(--lz-text-muted);
+        }
+    }
+
+    .fi-input,
+    .fi-select-input {
+        @apply py-2 placeholder:text-(--lz-text-muted)/80;
+    }
+
+    /* Checkbox & radio: tone-aware solid when checked. */
+    input[type='checkbox'].fi-checkbox-input,
+    input[type='radio'].fi-radio-input {
+        @apply shadow-none ring-cat-400/80 dark:ring-cat-600;
+
+        &:checked,
+        &:indeterminate {
+            @apply bg-(--lz-solid) text-(--lz-solid) ring-0;
+        }
+
+        &:focus-visible {
+            @apply ring-2 ring-(--lz-ring)/40;
+        }
+    }
+
+    input[type='checkbox'].fi-checkbox-input {
+        @apply rounded-[5px];
+    }
+
+    .dark input[type='checkbox'].fi-checkbox-input:checked:not([data-lazy-tone='accent'] *) {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%2318212b' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z'/%3E%3C/svg%3E");
+    }
+
+    .dark input[type='radio'].fi-radio-input:checked:not([data-lazy-tone='accent'] *) {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%2318212b' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3C/svg%3E");
+    }
+
+    /* Toggle: the compact LazyUI switch. */
+    .fi-toggle {
+        @apply h-5 w-9 border-[3px] bg-cat-300 focus-visible:ring-(--lz-ring)/40 dark:bg-cat-700;
+
+        & > :first-child {
+            @apply size-3.5 shadow-sm;
+        }
+
+        &.fi-toggle-on {
+            @apply bg-(--lz-solid);
+
+            & > :first-child {
+                @apply translate-x-4 bg-(--lz-on-solid) rtl:-translate-x-4;
+            }
+        }
+
+        & .fi-icon {
+            @apply hidden;
+        }
+    }
+
+    /* Toggle buttons and other pressed-state buttons. */
+    .fi-btn:not(.fi-outlined):is(input:checked + label, [aria-pressed='true']):not(.fi-color) {
+        @apply bg-(--lz-solid) text-(--lz-on-solid);
+    }
+
+    /* Repeater & builder items: nested cards. */
+    .fi-fo-repeater-item,
+    .fi-fo-builder-item {
+        @apply rounded-(--lz-radius-card) bg-(--lz-surface) shadow-none ring-1 ring-(--lz-line);
+    }
+
+    .fi-fo-repeater-item-header,
+    .fi-fo-builder-item-header {
+        @apply rounded-t-(--lz-radius-card) bg-(--lz-surface-muted);
+    }
+
+    .fi-fo-repeater-item-has-header > .fi-fo-repeater-item-content,
+    .fi-fo-builder-item-has-header > .fi-fo-builder-item-content {
+        @apply border-dashed border-(--lz-line);
+    }
+
+    .fi-fo-key-value-table-ctn,
+    .fi-fo-tags-input,
+    .fi-fo-markdown-editor,
+    .fi-fo-rich-editor {
+        @apply rounded-(--lz-radius-control);
+    }
+
+    /* File upload: dashed LazyUI dropzone. */
+    .fi-fo-file-upload {
+        & .filepond--panel-root {
+            @apply rounded-(--lz-radius-card) border-2 border-dashed border-(--lz-line-strong) bg-(--lz-surface-muted) shadow-none ring-0;
+        }
+
+        & .filepond--drop-label label {
+            @apply text-(--lz-text-muted);
+        }
+    }
+
+    /* Slider: thin track, solid fill, round handle. */
+    .fi-fo-slider {
+        @apply rounded-full shadow-none ring-0;
+
+        & .noUi-connects {
+            @apply rounded-full bg-cat-200 dark:bg-cat-700/60;
+        }
+
+        & .noUi-connect {
+            @apply bg-(--lz-solid);
+        }
+
+        & .noUi-handle {
+            @apply rounded-full border-(--lz-line-strong) bg-(--lz-surface) shadow-sm dark:border-cat-600 dark:bg-cat-700;
+
+            &::before,
+            &::after {
+                @apply hidden;
+            }
+        }
+    }
+}

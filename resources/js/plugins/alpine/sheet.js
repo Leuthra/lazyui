@@ -3,12 +3,11 @@ export default function (Alpine) {
         instances: {},
 
         create({ id, isOpen = false, noscroll = true }) {
-            if (this.instances[id]) {
-                console.error(`Sheet with id "${id}" already exists.`);
-                return false;
+            // Idempotent: Livewire morphs and wire:navigate can re-run x-data on the same id.
+            if (!this.instances[id]) {
+                this.instances[id] = { isOpen, noscroll };
             }
 
-            this.instances[id] = { isOpen, noscroll };
             return {
                 toggle: () => this.toggle(id),
                 open: () => this.open(id),

@@ -32,7 +32,7 @@ export default function (Alpine) {
             });
 
             this.$watch('_options', (value) => {
-                this.$refs.selectOrigin.value = value.find((option) => option.selected).value;
+                this.$refs.selectOrigin.value = value.find((option) => option.selected)?.value ?? "";
                 this.$refs.selectOrigin.dispatchEvent(new Event('change', { bubbles: true }));
             });
 

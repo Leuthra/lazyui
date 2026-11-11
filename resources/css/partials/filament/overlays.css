@@ -1,0 +1,85 @@
+/*
+ * Modals, slide-overs, dropdowns, notifications.
+ */
+@layer components {
+    .fi-modal {
+        & > .fi-modal-close-overlay {
+            @apply bg-(--lz-backdrop) backdrop-blur-[2px];
+        }
+
+        & > .fi-modal-window-ctn > .fi-modal-window {
+            @apply bg-(--lz-surface) shadow-(--lz-shadow-pop) ring-0;
+        }
+
+        &:not(.fi-modal-slide-over):not(.fi-width-screen) > .fi-modal-window-ctn > .fi-modal-window {
+            @apply rounded-2xl;
+        }
+
+        /* Slide-overs reuse the LazyUI sheet: glass + gradient. */
+        &.fi-modal-slide-over > .fi-modal-window-ctn > .fi-modal-window {
+            @apply lazy-gradient bg-(--lz-surface);
+        }
+    }
+
+    .fi-modal-heading {
+        @apply text-base font-semibold tracking-tight;
+    }
+
+    .fi-modal-description {
+        @apply text-(--lz-text-muted);
+    }
+
+    .fi-modal-footer {
+        @apply border-dashed;
+    }
+
+    .fi-modal-icon-bg {
+        @apply rounded-xl;
+    }
+
+    /* Dropdowns: rounded panel, rounded items, dashed dividers. */
+    .fi-dropdown-panel {
+        @apply rounded-(--lz-radius-card) bg-(--lz-surface) p-1 shadow-(--lz-shadow-pop) ring-0;
+
+        &.fi-divided > * {
+            @apply border-dashed border-(--lz-line);
+        }
+    }
+
+    .fi-dropdown-list {
+        @apply p-0.5;
+    }
+
+    .fi-dropdown-list-item {
+        @apply rounded-lg px-2.5 py-2;
+
+        &:not(.fi-disabled):not([disabled]) {
+            @apply hover:bg-(--lz-surface-hover) focus-visible:bg-(--lz-surface-hover);
+        }
+    }
+
+    .fi-dropdown-header {
+        @apply rounded-lg;
+    }
+
+    /* Notifications: LazyUI toast with a soft icon tile. */
+    .fi-no-notification {
+        &:not(.fi-inline) {
+            @apply rounded-(--lz-radius-card) bg-(--lz-surface) p-2 pe-3 shadow-(--lz-shadow-pop) ring-0;
+        }
+
+        & .fi-no-notification-icon {
+            box-sizing: content-box;
+            @apply shrink-0 rounded-xl p-3;
+            background-color: color-mix(in oklab, currentColor 12%, transparent);
+        }
+
+        & .fi-no-notification-main {
+            @apply mt-0 self-center;
+        }
+
+        & .fi-no-notification-body {
+            @apply text-xs;
+        }
+    }
+}

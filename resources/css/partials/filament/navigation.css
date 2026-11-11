@@ -1,0 +1,111 @@
+/*
+ * Sidebar, sidebar groups/items, global search, user menu.
+ */
+@layer components {
+    .fi-sidebar {
+        @apply lazy-gradient bg-(--lz-surface) dark:bg-cat-800/85;
+
+        &.fi-sidebar-open {
+            @apply shadow-xl ring-0 dark:shadow-none lg:bg-(--lz-surface) lg:shadow-xl dark:lg:bg-cat-800/30 dark:lg:shadow-none;
+        }
+    }
+
+    .fi-body-has-topbar .fi-sidebar-header {
+        @apply bg-transparent shadow-none ring-0;
+    }
+
+    .fi-sidebar-header-controls {
+        @apply after:border-dashed after:border-(--lz-line);
+    }
+
+    .fi-sidebar-nav {
+        @apply px-4 py-6;
+    }
+
+    .fi-sidebar-nav-groups {
+        @apply mx-0 gap-y-5;
+    }
+
+    .fi-sidebar-group-btn {
+        @apply px-2 py-1;
+    }
+
+    .fi-sidebar-group-label {
+        @apply text-[11px] font-semibold tracking-wider text-(--lz-text-muted)/80 uppercase;
+    }
+
+    .fi-sidebar-item-btn {
+        @apply justify-start rounded-lg px-3.5 py-2.5 transition-colors;
+
+        & > .fi-icon {
+            @apply text-(--lz-text-muted);
+        }
+    }
+
+    .fi-sidebar-item-label {
+        @apply text-cat-600 dark:text-cat-400;
+    }
+
+    .fi-sidebar-item {
+        &.fi-sidebar-item-has-url > .fi-sidebar-item-btn {
+            @apply hover:bg-(--lz-surface-hover) focus-visible:bg-(--lz-surface-hover);
+        }
+
+        &.fi-active > .fi-sidebar-item-btn {
+            @apply bg-accent-500/10 hover:bg-accent-500/15 dark:bg-accent-400/10;
+
+            & > .fi-icon,
+            & .fi-sidebar-item-label {
+                @apply text-accent-600 dark:text-accent-300;
+            }
+        }
+    }
+
+    .fi-sidebar-item-grouped-border-part {
+        @apply bg-cat-300 dark:bg-cat-600;
+    }
+
+    .fi-sidebar-item.fi-active .fi-sidebar-item-grouped-border-part {
+        @apply bg-accent-500 dark:bg-accent-400;
+    }
+
+    .fi-sidebar-footer {
+        @apply border-dashed border-(--lz-line);
+    }
+
+    /* Global search: the soft pill from the LazyUI header. */
+    .fi-global-search-field .fi-input-wrp {
+        @apply rounded-lg border-transparent bg-cat-300/35 dark:border-transparent dark:bg-cat-700/25;
+    }
+
+    .fi-global-search-results-ctn {
+        @apply lazy-shadow-overlay rounded-(--lz-radius-card) bg-(--lz-surface)/95 ring-0 backdrop-blur;
+    }
+
+    .fi-global-search-result-group-header {
+        @apply bg-transparent text-[11px] font-semibold tracking-wider text-(--lz-text-muted) uppercase;
+    }
+
+    .fi-global-search-result-link {
+        @apply rounded-lg;
+    }
+
+    /* User menu */
+    .fi-topbar .fi-user-menu-trigger .fi-user-avatar,
+    .fi-user-avatar {
+        @apply ring-2 ring-(--lz-surface);
+    }
+}
+
+/* Collapsed desktop sidebar (->sidebarCollapsibleOnDesktop()): centred icons. */
+@layer components {
+    .fi-body-has-sidebar-collapsible-on-desktop .fi-sidebar:not(.fi-sidebar-open) {
+        & .fi-sidebar-nav {
+            @apply lg:px-3;
+        }
+
+        & .fi-sidebar-item-btn {
+            @apply lg:justify-center lg:px-0;
+        }
+    }
+}

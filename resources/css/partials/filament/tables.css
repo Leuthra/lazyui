@@ -1,0 +1,110 @@
+/*
+ * Tables: card container, quiet uppercase header, soft rows.
+ */
+@layer components {
+    .fi-ta-ctn {
+        @apply rounded-(--lz-radius-card) bg-(--lz-surface) shadow-(--lz-shadow-card) ring-1 ring-(--lz-line) dark:ring-transparent;
+
+        & .fi-ta-header,
+        & .fi-ta-header-toolbar,
+        & .fi-ta-filters-above-content-ctn {
+            @apply border-dashed border-(--lz-line);
+        }
+
+        & .fi-ta-header-toolbar {
+            @apply py-3;
+        }
+
+        & .fi-ta-selection-indicator,
+        & .fi-ta-filter-indicators,
+        & .fi-ta-reorder-indicator {
+            @apply border-(--lz-line) bg-(--lz-surface-muted);
+        }
+
+        & .fi-pagination {
+            @apply border-dashed border-(--lz-line);
+        }
+
+        & .fi-ta-filters-before-content-ctn,
+        & .fi-ta-filters-after-content-ctn {
+            @apply border-(--lz-line);
+        }
+    }
+
+    .fi-ta-content-ctn {
+        @apply divide-(--lz-line);
+
+        & .fi-ta-content-header {
+            @apply bg-(--lz-surface-muted);
+        }
+    }
+
+    .fi-ta-table {
+        @apply divide-(--lz-line);
+
+        & > thead {
+            @apply divide-(--lz-line) bg-(--lz-surface-muted);
+        }
+
+        & > tbody {
+            @apply divide-(--lz-line);
+        }
+
+        & > tfoot {
+            @apply bg-(--lz-surface-muted);
+        }
+    }
+
+    .fi-ta-header-cell {
+        @apply py-3 text-[11px] font-semibold tracking-wider text-(--lz-text-muted) uppercase;
+
+        & .fi-ta-header-cell-sort-btn {
+            @apply text-(--lz-text-muted);
+        }
+
+        &.fi-ta-header-cell-sorted,
+        &.fi-ta-header-cell-sorted .fi-ta-header-cell-sort-btn {
+            @apply text-(--lz-text);
+        }
+    }
+
+    .fi-ta-header-group-cell {
+        @apply text-xs text-(--lz-text-muted);
+    }
+
+    .fi-ta-row {
+        &.fi-clickable,
+        &:hover {
+            @apply bg-transparent hover:bg-(--lz-surface-hover);
+        }
+
+        &.fi-striped {
+            @apply bg-(--lz-surface-muted);
+        }
+
+        &.fi-selected {
+            @apply bg-accent-500/5 dark:bg-accent-400/5;
+        }
+
+        &.fi-ta-group-header-row {
+            @apply bg-(--lz-surface-muted);
+        }
+    }
+
+    .fi-ta-group-header {
+        @apply bg-(--lz-surface-muted);
+    }
+
+    .fi-ta-table-stacked-header-row .fi-ta-table-stacked-header-cell {
+        @apply bg-(--lz-surface-muted);
+    }
+
+    /* Pagination: compact segmented buttons. */
+    .fi-pagination-items {
+        @apply rounded-(--lz-radius-control) shadow-none ring-(--lz-line-strong) dark:ring-cat-700;
+    }
+
+    .fi-pagination-item.fi-active .fi-pagination-item-btn {
+        @apply bg-(--lz-solid) text-(--lz-on-solid);
+    }
+}

@@ -1,0 +1,16 @@
+# Keep the Composer dist small: development files are not shipped to apps.
+/.github            export-ignore
+/tests              export-ignore
+/workbench          export-ignore
+/playwright.config.ts export-ignore
+/testbench.yaml.dist  export-ignore
+/docs               export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/phpunit.xml.dist   export-ignore
+/package.json       export-ignore
+/package-lock.json  export-ignore
+/CONTRIBUTING.md    export-ignore
+
+# Compiled assets: committed, but hidden from diffs.
+/dist/**            linguist-generated -diff

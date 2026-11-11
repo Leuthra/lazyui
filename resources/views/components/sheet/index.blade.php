@@ -75,7 +75,7 @@
         x-transition:leave-start="{{ $transitionClasses[$placement]['leave'] }}"
         x-transition:leave-end="{{ $transitionClasses[$placement]['leaveTo'] }}"
         class="@twMerge(['absolute max-w-full transform', 'bg-white/90 dark:bg-cat-800/95 backdrop-blur', 'flex flex-col overflow-hidden', $class, $placements[$placement]])"
-        style="{{ in_array($placement, ['left', 'right']) ? "width: $size;" : "height: $size;" }}"
+        style="{{ in_array($placement, ['left', 'right']) ? "width: min($size, 100vw);" : "height: min($size, 100dvh);" }}"
         role="dialog"
         data-dialog-id="{{ $id }}"
     >

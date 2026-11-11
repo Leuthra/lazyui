@@ -1,0 +1,11 @@
+/vendor
+/node_modules
+/.phpunit.cache
+composer.lock
+.DS_Store
+/testbench.yaml
+/tests/visual/__screenshots__/local
+/test-results
+/playwright-report
+/tests/visual/.auth
+/workbench/public/app.css

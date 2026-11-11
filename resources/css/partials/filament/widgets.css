@@ -1,0 +1,37 @@
+/*
+ * Dashboard widgets: stats, charts, account.
+ */
+@layer components {
+    .fi-wi-stats-overview-stat {
+        @apply rounded-(--lz-radius-card) bg-(--lz-surface) p-5 shadow-(--lz-shadow-card) ring-1 ring-(--lz-line) dark:ring-transparent;
+
+        & .fi-wi-stats-overview-stat-label {
+            @apply text-xs font-semibold tracking-wider text-(--lz-text-muted) uppercase;
+        }
+
+        & .fi-wi-stats-overview-stat-value {
+            @apply text-3xl font-semibold tracking-tight text-(--lz-text);
+        }
+
+        & .fi-wi-stats-overview-stat-description {
+            @apply text-xs font-medium;
+        }
+
+        & .fi-wi-stats-overview-stat-chart {
+            @apply rounded-b-(--lz-radius-card) opacity-80;
+        }
+    }
+
+    .fi-wi-chart .fi-section-header-heading,
+    .fi-wi-table .fi-ta-header-heading {
+        @apply text-sm font-semibold;
+    }
+
+    .fi-wi-chart-filter .fi-input-wrp {
+        @apply min-h-8;
+    }
+
+    .fi-account-widget .fi-section-content {
+        @apply gap-x-4;
+    }
+}

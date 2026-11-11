@@ -1,0 +1,13 @@
+/*
+ * Build entry -> dist/filament.css, loaded by LazyUIPlugin in panels without a custom theme.
+ *
+ * No preflight and no Tailwind theme variables are emitted: `theme(reference inline)` makes utilities
+ * use literal values, so nothing here overrides Filament's --color-* / --font-* variables.
+ * Filament 5 styles its own markup through .fi-* classes, so the utilities here don't clash with it.
+ */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme) theme(reference inline);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+
+@import '../filament.css';

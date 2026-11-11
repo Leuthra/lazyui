@@ -1,0 +1,100 @@
+/*
+ * Buttons, icon buttons, button groups, links.
+ * Primary solid buttons use --lz-solid (black/white in the mono tone, accent in the accent tone).
+ */
+@layer components {
+    .fi-btn {
+        @apply rounded-(--lz-radius-control) font-medium;
+
+        &.fi-size-md,
+        &:not(.fi-size-xs, .fi-size-sm, .fi-size-lg, .fi-size-xl) {
+            @apply min-h-9 px-3.5;
+        }
+
+        /* Neutral (gray / no colour): LazyUI "outline" button. */
+        &:not(.fi-color):not(.fi-outlined) {
+            @apply bg-(--lz-surface) shadow-sm ring-(--lz-line-strong) dark:bg-transparent dark:ring-cat-700;
+        }
+
+        &.fi-color-primary.fi-outlined {
+            @apply ring-(--lz-solid) text-(--lz-text);
+
+            & > .fi-icon {
+                @apply text-(--lz-text);
+            }
+        }
+    }
+
+    .fi-btn-group {
+        @apply rounded-(--lz-radius-control) ring-(--lz-line-strong) dark:ring-cat-700;
+    }
+
+    .fi-icon-btn {
+        @apply rounded-(--lz-radius-control);
+
+        &:not(.fi-color) {
+            @apply text-(--lz-text-muted) hover:bg-(--lz-surface-hover) hover:text-(--lz-text);
+        }
+    }
+
+    /* Record actions in tables read as quiet, neutral icons. */
+    .fi-ta-actions .fi-icon-btn.fi-color-primary,
+    .fi-ta-actions .fi-link.fi-color-primary {
+        @apply text-(--lz-text-muted) hover:text-(--lz-text);
+
+        & > .fi-icon {
+            @apply text-current;
+        }
+    }
+
+    .fi-link {
+        @apply underline-offset-4;
+
+        &:hover {
+            @apply underline;
+        }
+    }
+}
+
+/*
+ * Colour variables must live in the utilities layer: Filament sets --bg / --text through
+ * utility classes (.fi-bg-color-600 ...), and a utilities-layer rule always beats a components-layer one.
+ */
+@layer utilities {
+    .fi-btn {
+        &.fi-color-gray:not(.fi-outlined):not(label):not([aria-pressed]) {
+            --bg: var(--lz-surface);
+            --text: var(--lz-text);
+            --hover-bg: var(--lz-surface-hover);
+            --hover-text: var(--lz-text);
+            --dark-bg: transparent;
+            --dark-text: #fff;
+            --dark-hover-bg: var(--lz-surface-hover);
+            --dark-hover-text: #fff;
+            @apply shadow-sm ring-1 ring-(--lz-line-strong) dark:ring-cat-700;
+        }
+
+        /* Primary: solid LazyUI button. */
+        &.fi-color-primary:not(.fi-outlined):not(label):not([aria-pressed]) {
+            --bg: var(--lz-solid);
+            --text: var(--lz-on-solid);
+            --hover-bg: var(--lz-solid-hover);
+            --hover-text: var(--lz-on-solid);
+            --dark-bg: var(--lz-solid);
+            --dark-text: var(--lz-on-solid);
+            --dark-hover-bg: var(--lz-solid-hover);
+            --dark-hover-text: var(--lz-on-solid);
+            @apply shadow-sm;
+        }
+    }
+
+    .fi-toggle.fi-toggle-on.fi-color {
+        --bg: var(--lz-solid);
+        --dark-bg: var(--lz-solid);
+    }
+
+    .fi-pagination-item.fi-active .fi-pagination-item-btn {
+        --bg: var(--lz-solid);
+        --text: var(--lz-on-solid);
+    }
+}

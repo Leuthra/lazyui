@@ -4,8 +4,6 @@ class Toast {
         this.limit = 0;
         this.placement = 'top-right';
         this.duration = 0;
-        this.#init();
-
         const handler = (options) => this.#show(options);
         handler.info = (options) => this.#showWithType('info', options);
         handler.success = (options) => this.#showWithType('success', options);
@@ -17,16 +15,39 @@ class Toast {
     }
 
     #init() {
-        const wrapper = document.querySelector('[data-lazy-toast]');
-        if (!wrapper) return console.warn('[LazyToast] wrapper not found. please read the documentation.');
-        const data = JSON.parse(wrapper.dataset.lazyToast);
-        this.limit = data.max || 0;
+        // The wrapper is looked up lazily: it may be rendered after this script runs
+        // (Livewire navigation, Filament render hooks). Without one, a default is created.
+        let wrapper = document.querySelector('[data-lazy-toast]');
+        if (wrapper && wrapper === this.wrapper && wrapper.isConnected) return true;
+        if (!wrapper) {
+            if (!document.body) return false;
+            wrapper = document.createElement('div');
+            wrapper.className = 'fixed w-full z-[99] max-w-[95%] sm:max-w-2xs sm:right-4 sm:-translate-x-0 top-4 right-1/2 translate-x-1/2';
+            wrapper.dataset.lazyToast = JSON.stringify({ placement: 'top-right', max: 4, duration: 3000 });
+            document.body.append(wrapper);
+        }
+        const data = JSON.parse(wrapper.dataset.lazyToast || '{}');
+        this.limit = data.max || 4;
         this.placement = data.placement || 'top-right';
         this.duration = data.duration || 3000;
         this.wrapper = wrapper;
+        return true;
+    }
+
+    #escape(value) {
+        const div = document.createElement('div');
+        div.textContent = String(value ?? '');
+        return div.innerHTML;
+    }
+
+    #body(options) {
+        return `<div class="flex-auto flex flex-col justify-center mr-3">${options?.title ? `<div class="text-sm inherit">${this.#escape(options.title)}</div>` : ''}${options?.message ? `<div class="text-xs text-cat-500">${this.#escape(options.message)}</div>` : ''}</div>`;
     }
 
     #show(options) {
+        if (typeof options === 'string') options = { title: options };
+        options = options || {};
+        if (!this.#init()) return;
         const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
         const div = document.createElement('div');
         div.id = id;
@@ -49,7 +70,7 @@ class Toast {
         const toastUpdate = (options) => {
             const toast = this.toasts.find((t) => t.id === id);
             if (!toast) return;
-            toast.element.querySelector('div').innerHTML = `<div>${this.#style(options.type)}</div><div class="flex-auto flex flex-col justify-center mr-3">${options?.title ? `<div class="text-sm inherit">${options.title}</div>` : ''}${options?.message ? `<div class="text-xs text-cat-500">${options.message}</div>` : ''}</div>`;
+            toast.element.querySelector('div').innerHTML = `${this.#style(options.type)}${this.#body(options)}`;
             setTimeout(() => {
                 this.#remove(id);
             }, this.duration);
@@ -133,7 +154,7 @@ class Toast {
                 toast.classList.add('opacity-100', 'translate-y-0');
             });
         });
-        toast.innerHTML = `${this.#style(options.type)}<div class="flex-auto flex flex-col justify-center mr-3">${options?.title ? `<div class="text-sm inherit">${options.title}</div>` : ''}${options?.message ? `<div class="text-xs text-cat-500">${options.message}</div>` : ''}</div>`;
+        toast.innerHTML = `${this.#style(options.type)}${this.#body(options)}`;
         return toast;
     }
 
@@ -165,3 +186,11 @@ class Toast {
 
 const toast = new Toast();
 window.toast = toast;
+
+// Livewire: $this->dispatch('toast', type: 'success', title: 'Saved');
+// Plain JS: window.dispatchEvent(new CustomEvent('toast', { detail: [{ type: 'info', title: 'Hi' }] }));
+window.addEventListener('toast', ({ detail }) => {
+    (Array.isArray(detail) ? detail : [detail]).forEach((options) => toast(options));
+});
+
+export default toast;

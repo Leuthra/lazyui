@@ -239,7 +239,7 @@ class Alert {
         const iconContainerClass = isCenter ? 'flex-col items-center' : 'flex-row items-start';
 
         div.innerHTML = `
-            <div class="bg-white dark:bg-cat-800 rounded-2xl p-5 w-full motion-duration-300 motion-preset-pop">
+            <div class="bg-white dark:bg-cat-800 rounded-2xl p-5 w-full lazy-pop">
                 <div class="flex flex-col w-full">
                     <div class="flex gap-3 ${iconContainerClass}">
                         ${iconHtml}

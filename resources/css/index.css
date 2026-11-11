@@ -1,0 +1,18 @@
+/*
+ * LazyUI for your app's own Tailwind build (front-end pages):
+ *
+ *   @import 'tailwindcss';
+ *   @import '../../vendor/lazyui/lazyui/resources/css/index.css';
+ *
+ * Compiled together with your views, so every utility exists once and the cascade stays predictable.
+ * No extra npm packages are needed.
+ */
+@import './theme.css';
+@import './partials/base.css';
+@import './partials/utils.css';
+@import './partials/layout.css';
+@import './partials/vendor/tippy.css';
+@import './partials/vendor/filepond.css';
+
+@source '../views';
+@source '../js';

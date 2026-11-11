@@ -28,7 +28,9 @@
                     method: xdata.method,
                     body: formData,
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content ?? '',
                     }
                 });
 
@@ -38,8 +40,8 @@
                 window.dispatchEvent(new CustomEvent('form', { detail: { id: $id, ok: response.ok, data, element: $event } }));
 
                 if (!response.ok) {
-                    if(xdata.toastErrors == 'detailed' && data.errors) {
-                        toastl.remove();
+                    if (xdata.toastErrors == 'detailed' && data.errors && window.toast && xdata.toast) {
+                        if (toastl) toastl.remove();
                         Object.values(data.errors).forEach((value, index) => {
                             setTimeout(() => {
                                 toast.warning(value[0]);

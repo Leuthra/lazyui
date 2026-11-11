@@ -1,0 +1,70 @@
+/*
+ * Small replacements for @tailwindcss/forms and tailwindcss-motion, so apps need no extra npm packages
+ * and the styles never leak onto inputs that aren't LazyUI's (Filament's included).
+ */
+
+@layer base {
+    /* Checkbox look used by <x-lazy::checkbox> and the multi-select / autocomplete options. */
+    .lazy-checkbox {
+        appearance: none;
+        print-color-adjust: exact;
+        display: inline-block;
+        flex-shrink: 0;
+        vertical-align: middle;
+        user-select: none;
+        border-width: 1px;
+        background-color: transparent;
+        background-origin: border-box;
+        background-size: 100% 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        &:checked {
+            border-color: transparent;
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+
+        &:indeterminate {
+            border-color: transparent;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-accent-500);
+            outline-offset: 2px;
+        }
+    }
+
+    /* Dark-on-light checkmark for the monochrome variant in dark mode. */
+    .dark .lazy-checkbox.reverse:checked {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    }
+}
+
+@keyframes lazy-spin {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes lazy-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@utility lazy-spin-slow {
+    animation: lazy-spin 10s linear infinite;
+}
+
+@utility lazy-pop {
+    animation: lazy-pop 300ms ease-out both;
+}

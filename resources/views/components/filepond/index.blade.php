@@ -17,9 +17,9 @@
 </div>
 
 @pushOnce('body')
-    <script src="{{ asset('assets/lazy/vendor/filepond/filepond-plugin-file-validate-type.min.js') }}"></script>
-    <script src="{{ asset('assets/lazy/vendor/filepond/filepond-plugin-image-preview.min.js') }}"></script>
-    <script src="{{ asset('assets/lazy/vendor/filepond/filepond.min.js') }}"></script>
+    <script src="{{ asset('vendor/lazyui/vendor/filepond/filepond-plugin-file-validate-type.min.js') }}"></script>
+    <script src="{{ asset('vendor/lazyui/vendor/filepond/filepond-plugin-image-preview.min.js') }}"></script>
+    <script src="{{ asset('vendor/lazyui/vendor/filepond/filepond.min.js') }}"></script>
     <script>
         window.filepondInstances = [];
         FilePond.registerPlugin(FilePondPluginImagePreview);
@@ -196,7 +196,7 @@
 
 @push('body')
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        window.lazyReady(() => {
             initFilePond({
                 selector: @js($id),
                 existingFiles: @json($existingFiles),

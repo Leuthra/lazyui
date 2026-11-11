@@ -6,7 +6,7 @@
         'remove_script_host' => false,
         'convert_urls' => true,
     ],
-    'toolbar' => [ 'aidialog styles | bold italic underline strikethrough | bullist numlist | alignleft aligncenter alignright alignjustify | link image codesample | code fullscreen' ],
+    'toolbar' => [ 'styles | bold italic underline strikethrough | bullist numlist | alignleft aligncenter alignright alignjustify | link image codesample | code fullscreen' ],
     'plugins' => [
         'lists',
         'autolink',
@@ -23,7 +23,7 @@
 <textarea id="{{ $id }}" {{ $attributes }}></textarea>
 
 @pushOnce('body')
-    <script src="{{ asset('assets/lazy/vendor/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('vendor/lazyui/vendor/tinymce/tinymce.min.js') }}"></script>
     <script>
         window.tinymceInstances = [];
 
@@ -37,30 +37,6 @@
                     tinymceInstances.push({ id, options });
                 }
 
-                @if (Illuminate\Support\Facades\Route::has('ai'))
-                options.plugins = options.plugins.concat('ai');
-                options = {
-                    ...options,
-                    ai_request : function (request, respondWith) {
-                        respondWith.string((signal) => window.fetch(@js(route('ai')), { signal, ...{
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': @js(csrf_token())
-                            },
-                            body: JSON.stringify({ request })
-                        } })
-                        .then(async (response) => {
-                                if (!response.ok) throw new Error('Failed to communicate with the AI');
-                                const data = await response.json();
-                                if(data.error) throw new Error(data.error);
-                                return data.response.trim().replace(/^```html\n/, "").replace(/\n```$/, "");
-                            })
-                        );
-                    },
-                };
-                @endif
 
                 tinymce.init({
                     selector,
@@ -81,8 +57,8 @@
             })
         }
 
-        window.addEventListener(window.eventKey, (event) => {
-            let theme = document.documentElement.getAttribute('theme-mode') || 'light';
+        window.addEventListener(window.LazyUIConfig?.eventKey || 'lazy-appearance-change', (event) => {
+            let theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
             tinymceInstances.forEach((item) => {
                 const { id, options } = item;
                 __loadTinyMCE({ id, theme, options });
@@ -93,8 +69,8 @@
 
 @push('body')
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let theme = document.documentElement.getAttribute('theme-mode') || 'light';
+        window.lazyReady(() => {
+            let theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
             __loadTinyMCE({
                 id: @js($id),
                 theme,
@@ -104,7 +80,7 @@
                     plugins: @json($plugins),
                 }
             }).then((editor) => {
-                editor.setContent(`{{ $slot }}`)
+                editor.setContent(@js((string) $slot))
             })
         });
     </script>

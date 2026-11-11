@@ -1,0 +1,18 @@
+/*
+ * LazyUI design for Filament panels.
+ *
+ * Every rule targets Filament's public CSS hooks (.fi-*) or its CSS variables (--primary-*, --bg, ...).
+ * tests/Feature/FilamentHooksTest fails when Filament drops a hook used here, so a Filament update
+ * can't silently break the look. Visual changes are caught by `npm run test:visual`.
+ *
+ * Files are ordered from global to specific. Design knobs live in tokens.css.
+ */
+@import './tokens.css';
+@import './layout.css';
+@import './navigation.css';
+@import './buttons.css';
+@import './forms.css';
+@import './surfaces.css';
+@import './tables.css';
+@import './overlays.css';
+@import './widgets.css';

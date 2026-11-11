@@ -1,0 +1,83 @@
+/*
+ * Panel design tokens. Change a value here and every component follows.
+ */
+@layer base {
+    :root {
+        --lz-canvas: #fff;
+        --lz-surface: #fff;
+        --lz-surface-muted: var(--color-cat-100);
+        --lz-surface-hover: color-mix(in oklab, var(--color-cat-200) 70%, transparent);
+        --lz-line: var(--color-cat-200);
+        --lz-line-strong: var(--color-cat-300);
+        --lz-text: var(--color-cat-900);
+        --lz-text-muted: var(--color-cat-500);
+        --lz-ring: var(--color-cat-700);
+        --lz-radius-card: 0.875rem;
+        --lz-radius-control: 0.5rem;
+        --lz-radius-pill: 9999px;
+        --lz-shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
+        --lz-shadow-pop: 0 0 2px 0 rgb(0 0 0 / 0.16), -20px 20px 40px -4px rgb(0 0 0 / 0.12);
+        --lz-backdrop: rgb(10 15 25 / 0.35);
+
+        /* Topbar glass. Keep it light: the blur is recomputed on every scroll frame. 0px disables it. */
+        --lz-glass-blur: 6px;
+        --lz-glass-opacity: 88%;
+
+        /* "mono" tone (default): primary buttons and controls are black/white, like LazyUI's default variant. */
+        --lz-solid: var(--color-cat-900);
+        --lz-solid-hover: var(--color-cat-750);
+        --lz-on-solid: #fff;
+    }
+
+    .dark {
+        --lz-canvas: var(--color-cat-900);
+        --lz-surface: var(--color-cat-800);
+        --lz-surface-muted: color-mix(in oklab, var(--color-cat-950) 45%, transparent);
+        --lz-surface-hover: color-mix(in oklab, var(--color-cat-700) 30%, transparent);
+        --lz-line: color-mix(in oklab, var(--color-cat-700) 55%, transparent);
+        --lz-line-strong: var(--color-cat-700);
+        --lz-text: #fff;
+        --lz-text-muted: var(--color-cat-400);
+        --lz-ring: var(--color-cat-200);
+        --lz-shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+        --lz-shadow-pop: 0 0 0 1px rgb(255 255 255 / 0.05), -20px 20px 40px -4px rgb(0 0 0 / 0.5);
+        --lz-backdrop: rgb(0 0 0 / 0.55);
+        --lz-solid: #fff;
+        --lz-solid-hover: color-mix(in oklab, #fff 88%, transparent);
+        --lz-on-solid: var(--color-cat-900);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+        :root {
+            --lz-glass-blur: 0px;
+            --lz-glass-opacity: 100%;
+        }
+    }
+
+    /* Filament's primary follows the accent picked in the appearance sheet. */
+    html.lazy[theme-accent] {
+        --primary-50: var(--color-accent-50);
+        --primary-100: var(--color-accent-100);
+        --primary-200: var(--color-accent-200);
+        --primary-300: var(--color-accent-300);
+        --primary-400: var(--color-accent-400);
+        --primary-500: var(--color-accent-500);
+        --primary-600: var(--color-accent-600);
+        --primary-700: var(--color-accent-700);
+        --primary-800: var(--color-accent-800);
+        --primary-900: var(--color-accent-900);
+        --primary-950: var(--color-accent-950);
+    }
+
+    /* "accent" tone: solid surfaces use the accent instead of black/white. */
+    html[data-lazy-tone='accent'] {
+        --lz-solid: var(--color-accent-600);
+        --lz-solid-hover: var(--color-accent-500);
+        --lz-on-solid: #fff;
+    }
+
+    html[data-lazy-tone='accent'].dark {
+        --lz-solid: var(--color-accent-500);
+        --lz-solid-hover: var(--color-accent-400);
+    }
+}

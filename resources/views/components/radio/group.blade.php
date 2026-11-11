@@ -5,8 +5,8 @@
 
 <div
     x-data="{
-        __selected: @if ($defaultValue) '{{ $defaultValue }}' @else 'undefined' @endif,
-        name: '{{ $name }}',
+        __selected: @js($defaultValue ?: null),
+        name: @js($name),
     }"
     x-modelable="__selected"
     {{ $attributes->twMerge('grid gap-2') }}

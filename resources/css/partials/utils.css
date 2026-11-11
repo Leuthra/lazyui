@@ -1,0 +1,52 @@
+@utility lazy-background {
+    @apply bg-white text-cat-900 dark:bg-cat-900! dark:text-white;
+}
+
+/*
+ * Soft cyan/red glow used on sidebar, sheets and popovers. Images are published to public/vendor/lazyui.
+ * Deliberately no backdrop-filter: blurring large fixed areas costs a repaint on every scroll frame.
+ */
+@utility lazy-gradient {
+    background-image: url('/vendor/lazyui/image/cyan-blur.png'), url('/vendor/lazyui/image/red-blur.png');
+    background-repeat: no-repeat, no-repeat;
+    background-position: right top, left bottom;
+    background-size: 50%, 50%;
+}
+
+@utility lazy-gradient-none {
+    backdrop-filter: none;
+    background-image: none;
+}
+
+@utility lazy-shape-square {
+    mask: url('/vendor/lazyui/image/shape-square.svg');
+}
+
+@utility lazy-shadow-overlay {
+    box-shadow:
+        0 0 2px 0 rgb(0 0 0 / 0.2),
+        -20px 20px 40px -4px rgb(0 0 0 / 0.12);
+}
+
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html.lazy {
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 3px;
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: none;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            @apply bg-cat-500/30;
+            border-radius: 8px;
+        }
+    }
+}

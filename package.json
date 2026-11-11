@@ -1,10 +1,21 @@
 {
-    "devDependencies": {
-        "tailwindcss-motion": "^1.1.0",
-        "@tailwindcss/forms": "^0.5.10"
+    "name": "lazyui",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "npm run build:js && npm run build:css",
+        "build:js": "esbuild resources/js/index.js --bundle --minify --format=iife --target=es2020 --outfile=dist/lazyui.js && esbuild resources/js/filament.js --bundle --minify --format=iife --target=es2020 --outfile=dist/lazyui-filament.js && esbuild resources/js/theme.js --minify --target=es2020 --outfile=dist/theme.js",
+        "build:css": "tailwindcss -i resources/css/entries/filament.css -o dist/filament.css --minify",
+        "dev": "npm run build -- --watch",
+        "test:visual": "playwright test",
+        "test:visual:update": "playwright test --update-snapshots",
+        "build:workbench": "tailwindcss -i workbench/resources/css/app.css -o workbench/public/app.css --minify"
     },
-    "dependencies": {
-        "simplebar": "^6.3.0",
-        "tippy.js": "^6.3.7"
+    "devDependencies": {
+        "@tailwindcss/cli": "^4.1.0",
+        "esbuild": "^0.25.0",
+        "tailwindcss": "^4.1.0",
+        "tippy.js": "^6.3.7",
+        "@playwright/test": "^1.65.0"
     }
 }

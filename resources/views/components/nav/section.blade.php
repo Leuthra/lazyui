@@ -5,7 +5,7 @@
 ])
 
 <div
-    x-data="{ expanded: {{ $isOpen }} }"
+    x-data="{ expanded: @js((bool) $isOpen) }"
     @class([
         'hidden' => $hideIf,
         'mt-3'

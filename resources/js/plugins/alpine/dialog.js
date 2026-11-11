@@ -3,12 +3,11 @@ export default function (Alpine) {
         instances: {},
 
         create({ id, isOpen = false, noscroll = true, fullscreen = false }) {
-            if (this.instances[id]) {
-                console.error(`Dialog with id "${id}" already exists.`);
-                return false;
+            // Idempotent: Livewire morphs and wire:navigate can re-run x-data on the same id.
+            if (!this.instances[id]) {
+                this.instances[id] = { isOpen, noscroll, fullscreen };
             }
 
-            this.instances[id] = { isOpen, noscroll, fullscreen };
             return {
                 toggle: () => this.toggle(id),
                 open: () => this.open(id),
@@ -70,7 +69,7 @@ export default function (Alpine) {
         },
 
         isFullscreen(id = null) {
-            return this.instances[id].fullscreen;
+            return this.instances[id]?.fullscreen || false;
         },
 
         _emitEvent(id, status) {
